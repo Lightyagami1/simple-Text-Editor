@@ -1,5 +1,8 @@
 from tkinter import *
+import tkinter.filedialog as tkfd
+import tkinter.scrolledtext as tkst
 
+filename = ''
 
 def donothing():
    filewin = Toplevel(root)
@@ -7,13 +10,14 @@ def donothing():
    button.pack()
    
 def openFile():
-    fileInstance = open(filename.GetValue(), 'w')
-    contents.SetValue(file.read())
-    file.close()
+    filename = tkfd.askopenfilename (initialdir = "$HOME", title = "choose your file", filetypes = (("text file",".txt"),("all files","*.*"))) in globals()
+    fileInstance = open(filename, 'r+')
+    text.insert("end", fileInstance.read())
+    fileInstance.close()
 
-def saveFile(event):
-    fileInstance = open(filename.GetValue(), 'w')
-    fileInstance.write(contents.GetValue())
+def saveFile():
+    fileInstance = open(filename, 'r+')
+    fileInstance.write(text.get(1.0, END))
     fileInstance.close()
 
 def about():
@@ -24,9 +28,19 @@ def exit():
     root.quit()
 
 root = Tk()
-text = Text(root)
-text.insert(END, ".....hello")
-menubar = Menu(root)
+
+root.title ("TextEditorsKaBaap")
+
+menuFrame = Frame (root)
+menuFrame.pack(side = TOP)
+textFrame = Frame(root)
+textFrame.pack (side = BOTTOM, expand="yes")
+text = tkst.ScrolledText(textFrame)
+text.pack(expand=True)
+text.insert(END, "")
+
+
+menubar = Menu(menuFrame)
 filemenu = Menu(menubar, tearoff=0)
 filemenu.add_command(label="Open", command=openFile)
 filemenu.add_command(label="New", command=donothing)
